@@ -1,0 +1,6 @@
+services:
+  movensys_manipulator:
+    environment:
+      - XAUTHORITY=/tmp/.docker.xauth
+    volumes:
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:ro
