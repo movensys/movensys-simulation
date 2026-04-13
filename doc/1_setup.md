@@ -12,7 +12,7 @@ export HOST_USER_UID=$(id -u)
 export HOST_USER_GID=$(id -g)
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 export ISAAC_ROS_WS=~/workspaces/isaac_ros-dev
-export MOVENSYS_MANIPULATOR_PACKAGES=~/workspaces/movensys_ws/src/movensys-manipulator
+export MOVENSYS_PERCEPTION_PACKAGES=~/workspaces/movensys_ws/src/movensys-perception
 ```
 ```
 xhost +local:docker
@@ -36,7 +36,7 @@ sysctl net.core.rmem_max net.core.rmem_default net.core.wmem_max net.core.wmem_d
 ```
 mkdir -p  ~/workspaces/movensys_ws/src
 cd ~/workspaces/movensys_ws/src
-git clone git@github.com:movensys/movensys-manipulator.git
+git clone git@github.com:movensys/movensys-perception.git
 ```
 
 ## 5. How to run

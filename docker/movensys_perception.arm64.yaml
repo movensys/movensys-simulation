@@ -1,5 +1,5 @@
 services:
-  movensys_manipulator:
+  movensys_perception:
     build:
       args:
         - ARCH=arm64

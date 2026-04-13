@@ -1,5 +1,5 @@
 services:
-  movensys_manipulator:
+  movensys_perception:
     environment:
       - XAUTHORITY=/tmp/.docker.xauth
     volumes:

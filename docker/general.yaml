@@ -1,5 +1,5 @@
 services:
-  movensys_manipulator:
+  movensys_perception:
     restart: unless-stopped
     build:
       context: .
@@ -29,7 +29,7 @@ services:
       - QT_X11_NO_MITSHM=1
       - ROS_DISTRO=${ROS_DISTRO}
     volumes:
-      - ${MOVENSYS_MANIPULATOR_PACKAGES}:/home/admin/workspaces/movensys_manipulator_ws/src/movensys-manipulator:rw
+      - ${MOVENSYS_PERCEPTION_PACKAGES}:/home/admin/workspaces/movensys_ws/src/movensys-perception:rw
       - ${CYCLONEDDS_DIR}:/home/admin/workspaces/cyclonedds.xml:ro
       - /etc/localtime:/etc/localtime:ro
       - /tmp/.X11-unix:/tmp/.X11-unix
@@ -39,8 +39,8 @@ services:
     command: ["/bin/bash","-lc",
               "source /opt/ros/${ROS_DISTRO}/setup.bash && \
 
-               echo ====== Build movensys_manipulator ======= && \
-               cd /home/admin/workspaces/movensys_manipulator_ws && \
+               echo ====== Build movensys_ws ======= && \
+               cd /home/admin/workspaces/movensys_ws && \
                mkdir -p /home/admin/ws/{build,install,test_results,colcon_logs} && \
                colcon --log-base /home/admin/ws/colcon_logs build \
                   --build-base /home/admin/ws/build \

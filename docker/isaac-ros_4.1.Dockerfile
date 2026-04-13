@@ -28,7 +28,6 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y \
       ros-jazzy-isaac-ros-cumotion-examples \
-      ros-jazzy-isaac-manipulator-ros-python-utils \
       ros-jazzy-isaac-ros-nvblox \
     && rm -rf /var/lib/apt/lists/*
 
