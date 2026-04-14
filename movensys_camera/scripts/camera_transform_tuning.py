@@ -21,12 +21,12 @@ class CameraTransformTuner(Node):
         # Declare parameters with current values from camera_top_transform.launch.py
         self.declare_parameter('parent_frame', 'world_manipulator')
         self.declare_parameter('child_frame', 'camera_top')
-        self.declare_parameter('x', -0.7)
-        self.declare_parameter('y', -0.7)
-        self.declare_parameter('z', 0.8318)
-        self.declare_parameter('roll', -2.078)
-        self.declare_parameter('pitch', -0.0121)
-        self.declare_parameter('yaw', -0.7338)
+        self.declare_parameter('x', 0.2)
+        self.declare_parameter('y', 0.0)
+        self.declare_parameter('z', 0.7)
+        self.declare_parameter('roll', 0.0)
+        self.declare_parameter('pitch', 1.57)
+        self.declare_parameter('yaw', 0.0)
 
         self.parent_frame = self.get_parameter('parent_frame').value
         self.child_frame = self.get_parameter('child_frame').value
