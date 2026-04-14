@@ -25,7 +25,7 @@ from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
     realsense_config_file_path = os.path.join(
-        get_package_share_directory('movensys_perception'),
+        get_package_share_directory('movensys_camera'),
         'config', 'realsense_top_depth.yaml'
     )
 

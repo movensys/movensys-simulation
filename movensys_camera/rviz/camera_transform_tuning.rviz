@@ -6,12 +6,13 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /TF1
         - /TF1/Frames1
         - /TF1/Tree1
         - /DepthCloud1
         - /DepthCloud1/Auto Size1
       Splitter Ratio: 0.5
-    Tree Height: 754
+    Tree Height: 760
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -99,12 +100,12 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        bracket:
+        gripper:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        gripper:
+        jetson_thor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -119,7 +120,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        stand:
+        power_supply:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -143,6 +144,8 @@ Visualization Manager:
       Visual Enabled: true
     - Class: rviz_default_plugins/TF
       Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: false
@@ -160,18 +163,18 @@ Visualization Manager:
           Value: false
         Link6:
           Value: false
-        bracket:
-          Value: false
-        camera_nvblox_link:
+        camera_top_color_optical_frame:
           Value: true
         gripper:
           Value: false
+        jetson_thor:
+          Value: true
         picker_1:
           Value: false
         picker_2:
           Value: false
-        stand:
-          Value: false
+        power_supply:
+          Value: true
         table:
           Value: false
         world_manipulator:
@@ -183,23 +186,25 @@ Visualization Manager:
       Show Names: false
       Tree:
         world_manipulator:
-          camera_nvblox_link:
+          camera_top_color_optical_frame:
             {}
           table:
-            stand:
-              Link0:
-                Link1:
-                  Link2:
-                    Link3:
-                      Link4:
-                        Link5:
-                          Link6:
-                            bracket:
-                              gripper:
-                                picker_1:
-                                  {}
-                                picker_2:
-                                  {}
+            Link0:
+              Link1:
+                Link2:
+                  Link3:
+                    Link4:
+                      Link5:
+                        Link6:
+                          gripper:
+                            picker_1:
+                              {}
+                            picker_2:
+                              {}
+            jetson_thor:
+              {}
+            power_supply:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -212,15 +217,15 @@ Visualization Manager:
         Min Value: -10
         Value: true
       Axis: Z
-      CameraInfo Topic: /image_nvblox/camera_info
+      CameraInfo Topic: /image_top/camera_info
       Channel Name: intensity
       Class: rviz_default_plugins/DepthCloud
       Color: 255; 255; 255
-      Color Image Topic: /image_nvblox/rgb
+      Color Image Topic: /image_top/rgb
       Color Transformer: RGB8
       Color Transport Hint: raw
       Decay Time: 0
-      Depth Map Topic: /image_nvblox/depth
+      Depth Map Topic: /image_top/depth
       Depth Map Transport Hint: raw
       Enabled: true
       Invert Rainbow: false
@@ -288,7 +293,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 5.096011161804199
+      Distance: 3.9144105911254883
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -303,10 +308,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.45500046014785767
+      Pitch: 0.5400003790855408
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.355034828186035
+      Yaw: 4.585031509399414
     Saved: ~
 Window Geometry:
   Displays:
@@ -314,7 +319,7 @@ Window Geometry:
   Height: 1043
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001e7000003b9fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000003b9000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000015f000003b9fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003d000003b9000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004420000003efc0100000002fb0000000800540069006d00650100000000000004420000000000000000fb0000000800540069006d006501000000000000045000000000000000000000042e000003b900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001e7000003bdfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003b000003bd000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000015f000003bdfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003b000003bd000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004420000003efc0100000002fb0000000800540069006d00650100000000000004420000000000000000fb0000000800540069006d006501000000000000045000000000000000000000042e000003bd00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Tool Properties:

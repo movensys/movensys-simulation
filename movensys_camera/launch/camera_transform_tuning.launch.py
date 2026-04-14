@@ -9,7 +9,7 @@ import os
 
 
 def generate_launch_description():
-    pkg_share = get_package_share_directory('movensys_perception')
+    pkg_share = get_package_share_directory('movensys_camera')
 
     xacro_file = os.path.join(get_package_share_directory('movensys_manipulator_description'),
         'urdf', 'movensys_manipulator.xacro')
@@ -44,7 +44,7 @@ def generate_launch_description():
     )
 
     camera_transform_tuning_node = Node(
-        package='movensys_perception',
+        package='movensys_camera',
         executable='camera_transform_tuning.py',
         name='camera_transform_tuner',
         output='screen',
