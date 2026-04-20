@@ -17,15 +17,24 @@ source /opt/ros/$ROS_DISTRO/setup.bash
 source ~/.bashrc
 ```
 
-### 1-2. Running Isaac Sim
+### 1-2. Install Isaacsim
+
+### 1-3. Clone Repository
+```
+mkdir -p  ~/workspaces
+cd ~/workspaces
+git clone https://github.com/movensys/movensys-simulation.git
+```
+
+### 1-4. Running Isaac Sim
 
 1. Run Isaac Sim.
 ```
-~/workspaces/isaacsim/isaac-sim.selector.sh
+~/isaacsim/isaac-sim.selector.sh
 ```
 2. Activate `isaacsim.ros2.bridge`
 3. Click `Start`
-4. Open USD file: `~/workspaces/robotics_isaac_sim/<usd_name>.usd` as your test scenario.
+4. Open USD file: `~/workspaces/movensys-simulation/<usd_name>.usd` as your test scenario.
 5. Click `Play` on the left side.
 
 
