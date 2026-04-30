@@ -416,17 +416,15 @@ def build_dice(root_path: str, stage: Usd.Stage) -> UsdGeom.Xform:
     mat_dir = f"{root_path}/Materials"
     mat_body = _make_material(
         stage, f"{mat_dir}/Wood",
-        Gf.Vec3f(0.78, 0.66, 0.47),   # light beech albedo (#C6A878)
-        roughness=0.40,
-        clearcoat=0.15,
-        clearcoat_roughness=0.20,
+        Gf.Vec3f(0.35, 0.22, 0.094),  # darker beech, sRGB→linear of #9E8057
+        roughness=0.60,
+        clearcoat=0.0,
     )
     mat_pip = _make_material(
         stage, f"{mat_dir}/Pip",
-        Gf.Vec3f(0.078, 0.078, 0.078),  # painted black (#141414, not pure 0)
-        roughness=0.40,
-        clearcoat=0.10,
-        clearcoat_roughness=0.25,
+        Gf.Vec3f(0.012, 0.012, 0.012),  # painted black, sRGB→linear of #141414
+        roughness=0.60,
+        clearcoat=0.0,
     )
 
     # ---- physics on root --------------------------------------------------

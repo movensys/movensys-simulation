@@ -22,11 +22,9 @@ def Xform "Dice" (
             def Shader "Shader"
             {
                 uniform token info:id = "UsdPreviewSurface"
-                float inputs:clearcoat = 0.15
-                float inputs:clearcoatRoughness = 0.2
-                color3f inputs:diffuseColor = (0.78, 0.66, 0.47)
+                color3f inputs:diffuseColor = (0.35, 0.22, 0.094)
                 float inputs:metallic = 0
-                float inputs:roughness = 0.4
+                float inputs:roughness = 0.6
                 token outputs:surface
             }
         }
@@ -38,11 +36,9 @@ def Xform "Dice" (
             def Shader "Shader"
             {
                 uniform token info:id = "UsdPreviewSurface"
-                float inputs:clearcoat = 0.1
-                float inputs:clearcoatRoughness = 0.25
-                color3f inputs:diffuseColor = (0.078, 0.078, 0.078)
+                color3f inputs:diffuseColor = (0.012, 0.012, 0.012)
                 float inputs:metallic = 0
-                float inputs:roughness = 0.4
+                float inputs:roughness = 0.6
                 token outputs:surface
             }
         }
