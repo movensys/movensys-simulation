@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 """
-Create a 5×5×5 cm standard d6 dice USD asset for NVIDIA Isaac Sim.
+Create a 5×5×5 cm wood-tone d6 dice USD asset for NVIDIA Isaac Sim.
 
-Each face shows its value (1-6) via cylindrical indentations (pips) carved
-into the cube body.  Standard opposite-face rule: 1+6, 2+5, 3+4.
+The body is a rounded cube (linear blend toward a sphere) with a light beech
+albedo and a clearcoat lacquer feel. Each face carries its value (1-6) as a
+shallow circular pip — black painted dots flush with the surface. Standard
+opposite-face rule: 1+6, 2+5, 3+4.
 
-Usage (standalone with system python + pxr installed):
-    python3 create_dice.py [output.usda]
+Usage — standalone (writes a .usda file):
+    pip install -r dobot_cr3a/requirements.txt   # one-time setup
+    python3 dobot_cr3a/create_dice.py [output.usda]
 
-Usage with Isaac Sim's bundled python:
-    isaacsim-python create_dice.py dice.usda
+    # default output path is ./dice.usda
 
-Usage inside Isaac Sim / Omniverse (in a Script Editor panel):
-    from create_dice import build_dice
+Usage — inside Isaac Sim / Omniverse (Window → Script Editor):
+    import sys, importlib
+    sys.path.append("./dobot_cr3a")  # relative to repo root
+    import create_dice; importlib.reload(create_dice)
     import omni.usd
-    build_dice("/World/Dice", omni.usd.get_context().get_stage())
+    create_dice.build_dice("/World/Dice", omni.usd.get_context().get_stage())
 """
 from __future__ import annotations
 
@@ -31,10 +35,14 @@ DICE_SIZE   = 0.05          # 5 cm cube
 HALF        = DICE_SIZE / 2 # 2.5 cm
 
 PIP_RADIUS  = 0.0035        # 3.5 mm pip radius
-PIP_DEPTH   = 0.0025        # 2.5 mm indentation depth
+PIP_DEPTH   = 0.0003        # 0.3 mm — flush "painted" pip
 PIP_SPACING = HALF * 0.52   # distance from face centre to outer pip row
 
-GRID_N      = 80            # grid cells per face edge for body mesh
+# Roundness blend factor: 0 = sharp cube, 1 = sphere. 0.20 yields ≈10% fillet
+# of the cube edge length (matches photo reference).
+ROUND       = 0.20
+
+GRID_N      = 96            # grid cells per face edge for body mesh
 N_CIRC      = 24            # vertices per pip circle
 
 # 2-D pip parameters in face-local [0,1] space
@@ -159,6 +167,23 @@ def _clip_poly_outside_circle(
 
 
 # ---------------------------------------------------------------------------
+# Rounded-cube mapping
+# ---------------------------------------------------------------------------
+def _round_xyz(x: float, y: float, z: float) -> Tuple[float, float, float]:
+    """Blend a flat-cube surface point toward its spherical projection.
+
+    Pulls cube edges and corners inward while leaving face centres on the
+    original plane, producing a soap-bar / rounded-cube silhouette.
+    """
+    length_sq = x * x + y * y + z * z
+    if length_sq < 1e-24:
+        return x, y, z
+    s = HALF / math.sqrt(length_sq)
+    factor = (1.0 - ROUND) + ROUND * s
+    return x * factor, y * factor, z * factor
+
+
+# ---------------------------------------------------------------------------
 # Mesh builders
 # ---------------------------------------------------------------------------
 def _build_meshes(stage, root_path, mat_body, mat_pip):
@@ -187,9 +212,11 @@ def _build_meshes(stage, root_path, mat_body, mat_pip):
         vx, vy, vz = float(v_vec[0]), float(v_vec[1]), float(v_vec[2])
 
         def to_3f(u: float, v: float) -> Gf.Vec3f:
-            return Gf.Vec3f(ox + ux * u + vx * v,
-                            oy + uy * u + vy * v,
-                            oz + uz * u + vz * v)
+            x = ox + ux * u + vx * v
+            y = oy + uy * u + vy * v
+            z = oz + uz * u + vz * v
+            rx, ry, rz = _round_xyz(x, y, z)
+            return Gf.Vec3f(rx, ry, rz)
 
         # Pip centres in 2-D face-local [0,1] space
         pip_2d = [(0.5 + pu * _PIP_SP2D, 0.5 + pv * _PIP_SP2D)
@@ -279,7 +306,11 @@ def _build_meshes(stage, root_path, mat_body, mat_pip):
         lift = normal * 0.0002          # tiny lift to cover grid seam
 
         for pcx, pcy in pip_2d:
-            pc_3d = origin + u_vec * pcx + v_vec * pcy
+            pc_flat = origin + u_vec * pcx + v_vec * pcy
+            rx, ry, rz = _round_xyz(float(pc_flat[0]),
+                                    float(pc_flat[1]),
+                                    float(pc_flat[2]))
+            pc_3d = Gf.Vec3d(rx, ry, rz)
             pb = len(pip_pts)
             depth_off = normal * PIP_DEPTH
 
@@ -343,12 +374,19 @@ def _make_material(
     path: str,
     color: Gf.Vec3f,
     roughness: float = 0.3,
+    metallic: float = 0.0,
+    clearcoat: float = 0.0,
+    clearcoat_roughness: float = 0.2,
 ) -> UsdShade.Material:
     mat = UsdShade.Material.Define(stage, path)
     shader = UsdShade.Shader.Define(stage, f"{path}/Shader")
     shader.CreateIdAttr("UsdPreviewSurface")
     shader.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set(color)
     shader.CreateInput("roughness",    Sdf.ValueTypeNames.Float).Set(roughness)
+    shader.CreateInput("metallic",     Sdf.ValueTypeNames.Float).Set(metallic)
+    if clearcoat > 0.0:
+        shader.CreateInput("clearcoat",          Sdf.ValueTypeNames.Float).Set(clearcoat)
+        shader.CreateInput("clearcoatRoughness", Sdf.ValueTypeNames.Float).Set(clearcoat_roughness)
     mat.CreateSurfaceOutput().ConnectToSource(
         shader.ConnectableAPI(), "surface"
     )
@@ -366,8 +404,8 @@ def build_dice(root_path: str, stage: Usd.Stage) -> UsdGeom.Xform:
 
         <root>        -- RigidBodyAPI + MassAPI
           Collision    -- invisible Cube with CollisionAPI (box shape for PhysX)
-          Body         -- Mesh: white cube faces with smooth circular holes
-          Pips         -- Mesh: black cylindrical indentations
+          Body         -- Mesh: rounded wood-tone cube with shallow pip recesses
+          Pips         -- Mesh: near-black painted dots, slightly recessed
           Materials/
 
     Returns the root Xform prim.
@@ -376,15 +414,25 @@ def build_dice(root_path: str, stage: Usd.Stage) -> UsdGeom.Xform:
 
     # ---- materials --------------------------------------------------------
     mat_dir = f"{root_path}/Materials"
-    mat_white = _make_material(stage, f"{mat_dir}/White",
-                               Gf.Vec3f(0.95, 0.95, 0.95), roughness=0.25)
-    mat_black = _make_material(stage, f"{mat_dir}/Black",
-                               Gf.Vec3f(0.05, 0.05, 0.05), roughness=0.25)
+    mat_body = _make_material(
+        stage, f"{mat_dir}/Wood",
+        Gf.Vec3f(0.78, 0.66, 0.47),   # light beech albedo (#C6A878)
+        roughness=0.40,
+        clearcoat=0.15,
+        clearcoat_roughness=0.20,
+    )
+    mat_pip = _make_material(
+        stage, f"{mat_dir}/Pip",
+        Gf.Vec3f(0.078, 0.078, 0.078),  # painted black (#141414, not pure 0)
+        roughness=0.40,
+        clearcoat=0.10,
+        clearcoat_roughness=0.25,
+    )
 
     # ---- physics on root --------------------------------------------------
     UsdPhysics.RigidBodyAPI.Apply(root.GetPrim())
     mass_api = UsdPhysics.MassAPI.Apply(root.GetPrim())
-    mass_api.GetMassAttr().Set(0.012)   # 12 g — typical plastic die
+    mass_api.GetMassAttr().Set(0.020)   # 20 g — solid wood die at 5 cm
 
     # ---- invisible collision cube -----------------------------------------
     collision = UsdGeom.Cube.Define(stage, f"{root_path}/Collision")
@@ -393,7 +441,7 @@ def build_dice(root_path: str, stage: Usd.Stage) -> UsdGeom.Xform:
     UsdPhysics.CollisionAPI.Apply(collision.GetPrim())
 
     # ---- visual meshes (body + pips) --------------------------------------
-    _build_meshes(stage, root_path, mat_white, mat_black)
+    _build_meshes(stage, root_path, mat_body, mat_pip)
 
     return root
 
@@ -418,8 +466,9 @@ def main() -> None:
     total_pips = sum(len(v) for v in PIP_PATTERN.values())
     print(f"Saved: {output}")
     print(f"  Cube size  : {DICE_SIZE*100:.0f} x {DICE_SIZE*100:.0f} x {DICE_SIZE*100:.0f} cm")
+    print(f"  Roundness  : {ROUND:.2f} (0=sharp cube, 1=sphere)")
     print(f"  Pip radius : {PIP_RADIUS*1000:.1f} mm")
-    print(f"  Pip depth  : {PIP_DEPTH*1000:.1f} mm (indentation)")
+    print(f"  Pip depth  : {PIP_DEPTH*1000:.2f} mm (flush painted)")
     print(f"  Total pips : {total_pips}")
     print()
     print("Face layout (Z-up, standard opposite rule):")
