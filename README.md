@@ -5,7 +5,7 @@ USD scene files for running the [`movensys-manipulator`](https://github.com/move
 ## Overview
 
 This repository ships ready-to-open Isaac Sim scenes for the Dobot CR3A and CR5A
-manipulators driven by the WMX ROS2 stack. Each scene wires the robot, gripper,
+manipulators driven by the WMX R2 stack. Each scene wires the robot, gripper,
 sensors, and `isaacsim.ros2.bridge` topics needed by the matching example in
 `movensys-manipulator`, so you can launch a demo without authoring the scene
 from scratch.
@@ -83,7 +83,7 @@ git clone https://github.com/movensys/movensys-simulation.git
 
 ## Related Repositories
 
-- [movensys-manipulator](https://github.com/movensys/movensys-manipulator) — Manipulator examples for the WMX ROS2 package
+- [movensys-manipulator](https://github.com/movensys/movensys-manipulator) — Manipulator examples for the WMX R2 package
 - [movensys-intelligence](https://github.com/movensys/movensys-intelligence) — VLM-driven task planning for the manipulator
 
 ## License
