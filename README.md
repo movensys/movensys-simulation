@@ -12,7 +12,7 @@ This repository ships ready-to-open Isaac Sim scenes for the Dobot CR3A/CR5A
 manipulators and the `diffbot` differential-drive base, all driven by the
 [WMX R2](https://github.com/movensys/wmx-r2) motion stack. Each scene wires the
 robot, gripper or wheels, sensors, and the `isaacsim.ros2.bridge` action graphs
-(joint states, `/cmd_vel`, camera, LiDAR, TF) needed by the matching example, so
+(joint states, `/cmd_vel_safe`, camera, LiDAR, TF) needed by the matching example, so
 you can launch a demo without authoring the scene from scratch.
 
 ## Repository Layout
@@ -42,7 +42,7 @@ how the robot is driven:
 | Suffix | Mode         | Purpose                                                    |
 |--------|--------------|------------------------------------------------------------|
 | `a`    | `simulation` | Pure Isaac Sim — no physical hardware needed               |
-| `b`    | `hil`        | Simulation-in-the-loop — sim visuals with the WMX runtime  |
+| `b`    | `hil`        | Hardware-in-the-loop: sim visuals with the WMX runtime     |
 | `c`    | `real`       | Visualization against the real robot                       |
 
 Diffbot scenes are not numbered; they use the `navigation_<mode>.usd` form.
