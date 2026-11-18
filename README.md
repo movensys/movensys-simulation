@@ -106,7 +106,7 @@ and `RMW_IMPLEMENTATION` must match the values used by the workspace that drives
 the scene, or Isaac Sim and the ROS 2 nodes will not see each other:
 
 ```
-export ROS_DOMAIN_ID=73
+export ROS_DOMAIN_ID=70
 export ROS_DISTRO=jazzy
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/$ROS_DISTRO/lib
